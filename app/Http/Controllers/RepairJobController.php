@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\RepairJob;
 use Illuminate\Http\Request;
 
@@ -11,16 +12,36 @@ class RepairJobController extends Controller
      public function store(request $request)
     {
         $request->validate([
-            'title' => 'required',
-            'description' => 'required',
+            'customer_name'=>'required|string',
+            'phone'=>'required|string',
+            'title' => 'required|string',
+            'description' => 'required|string',
         ]);
+        //check if customer extists
 
+        $customer = Customer::firstOrCreate(
+            ['phone'=>$request->phone],
+            [
+                'name' => $request->customer_name,
+                'email' => $request->customer_email,
+                'address' => $request->customer_address 
+            ]
+        );
+
+        //create repair job
+        
         $job = RepairJob::create([
+            'customer_id' => $customer->id,
             'user_id' => auth()->id(),
             'title' => $request->title,
             'description' => $request->description,
+            'status' => 'pending'
         ]);
-        return response()->json($job,201);
+        return response()->json([
+            'message' => 'Repair job created successfully',
+            'customer'=> $customer,
+            'job' => $job->id
+        ]);
 
     }
 

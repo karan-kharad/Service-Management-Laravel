@@ -30,5 +30,9 @@ Class RepairJob extends Model
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class,'');
+    }
 
 }
