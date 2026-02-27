@@ -1,37 +1,36 @@
+
 # Service App
 
-A Laravel-based application for managing repair jobs, users, and permissions. This project leverages Laravel's robust features, including authentication, authorization, and RESTful APIs, to provide a scalable backend service.
+Service App is a Laravel 12-based backend for managing repair jobs, customers, users, and roles. It features robust authentication (Passport), role/permission management (Spatie), and a modern asset pipeline (Vite + TailwindCSS).
 
 ## Features
 
-- User authentication and authorization (Laravel Passport & Spatie Permission)
-- Role and permission management
-- Repair job management
-- RESTful API endpoints
-- Modern Laravel 11+ application structure
+- User registration and login (API, Passport)
+- Role-based access control (owner, employee, admin)
+- Repair job creation, assignment, and status updates
+- Customer management (auto-create on job submission)
+- RESTful API endpoints for all core resources
 - Database migrations, seeders, and factories
-- Frontend assets managed with Vite
+- Frontend assets with Vite and TailwindCSS
+- Modern Laravel 12+ structure
 
 ## Project Structure
 
-- `app/` - Application core (Models, Controllers, Providers)
-- `bootstrap/` - Application bootstrap files
-- `config/` - Configuration files
-- `database/` - Migrations, seeders, and factories
-- `public/` - Publicly accessible files (entry point, assets)
-- `resources/` - Views, JS, and CSS assets
-- `routes/` - Route definitions (web, api, console)
-- `storage/` - Compiled files, logs, cache
+- `app/` - Models, Controllers, Providers
+- `routes/` - API and web route definitions
+- `database/` - Migrations, seeders, factories
+- `resources/` - Blade views, JS, CSS
+- `public/` - Entry point and built assets
+- `config/` - Application configuration
 - `tests/` - Unit and feature tests
-- `vendor/` - Composer dependencies
 
 ## Getting Started
 
 ### Prerequisites
 - PHP 8.2+
 - Composer
-- Node.js & npm (for frontend assets)
-- MySQL/PostgreSQL/SQLite (or other supported DB)
+- Node.js & npm
+- SQLite/MySQL/PostgreSQL
 
 ### Installation
 
@@ -51,7 +50,7 @@ A Laravel-based application for managing repair jobs, users, and permissions. Th
 4. **Copy and configure environment:**
 	```sh
 	cp .env.example .env
-	# Edit .env as needed
+	# Edit .env for your DB and mail settings
 	```
 5. **Generate application key:**
 	```sh
@@ -70,15 +69,30 @@ A Laravel-based application for managing repair jobs, users, and permissions. Th
 	php artisan serve
 	```
 
-## Usage
+## API Overview
 
-- Access the app at `http://localhost:8000`
-- API endpoints are available under `/api`
-- Manage users, roles, permissions, and repair jobs via the API or web interface
+All endpoints are under `/api` and use Passport authentication.
+
+### Auth
+- `POST /api/register` — Register user (name, email, password, role)
+- `POST /api/login` — Login (email, password)
+
+### Repair Jobs
+- `POST /api/repair-jobs` — Create job (employee only)
+- `GET /api/repair-jobs` — List jobs (owner only)
+- `GET /api/repair-jobs/assigend` — List assigned jobs (employee only)
+- `PUT /api/repair-jobs/{id}/status` — Update job status (employee only)
+
+### Roles/Permissions
+- Roles: admin, owner, employee (see `RoleSeeder`)
+- Permissions managed via Spatie package
+
+### Customers
+- Created automatically when a repair job is submitted with a new phone number
 
 ## Testing
 
-Run tests with:
+Run all tests:
 ```sh
 php artisan test
 ```
@@ -87,28 +101,10 @@ php artisan test
 
 - [laravel/framework](https://laravel.com/)
 - [spatie/laravel-permission](https://spatie.be/docs/laravel-permission)
-- [laravel/passport](https://laravel.com/docs/11.x/passport)
+- [laravel/passport](https://laravel.com/docs/12.x/passport)
 - [vite](https://vitejs.dev/)
+- [tailwindcss](https://tailwindcss.com/)
 
 ## License
 
 This project is open-source and available under the [MIT license](LICENSE).
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
